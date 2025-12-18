@@ -1,0 +1,33 @@
+{
+  "users": [
+    {
+      "id": 2,
+      "email": "fawazx9@hotmail.com",
+      "password": "Fawaz1234",
+      "tasks": [
+        {
+          "id": 1,
+          "title": "Sample Task",
+          "description": "This is a sample task description.",
+          "priority": "low",
+          "status": "done",
+          "createdAt": "2024-06-01T10:00:00Z",
+          "updatedAt": "2024-06-02T12:00:00Z",
+          "notes": [
+            {
+              "id": 1,
+              "content": { "type": "doc", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "This is a sample note for the task." }] }] },
+              "createdAt": "2024-06-02T12:10:00Z",
+              "updatedAt": "2024-06-02T12:10:00Z"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "counters": {
+    "userId": 2,
+    "taskId": 2,
+    "noteId": 2
+  }
+}

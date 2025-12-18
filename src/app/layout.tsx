@@ -1,16 +1,20 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+// import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
+import { CssBaseline } from "@mui/material";
+import ThemeProviderClient from "../lib/providers/colorThemeProvider";
+import Navbar from "../myComponents/navbar";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+// const geistSans = Geist({
+//   variable: "--font-geist-sans",
+//   subsets: ["latin"],
+// });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+// const geistMono = Geist_Mono({
+//   variable: "--font-geist-mono",
+//   subsets: ["latin"],
+// });
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -24,10 +28,41 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+      <body>
+        {/* <ClientProvider> 
+        In app/layout.tsx you should wrap the entire app with:
+
+React Query Provider
+
+MUI ThemeProvider
+
+CssBaseline
+
+Your Snackbar provider/store listener
+
+Dark mode state (context or Zustand)
+
+What to adjust
+
+Don’t create QueryClient inside pages.
+
+Create it once in a src/providers/Providers.tsx client component.
+        
+        
+        */}
+        {/* MUI cache provider – required for proper SSR/streaming */}
+        <AppRouterCacheProvider options={{ enableCssLayer: true }}>
+          {/* Client-side theme el ana 3amlo  */}
+          <ThemeProviderClient>
+            <CssBaseline />
+
+            <Navbar />
+            <div className="pt-27">{children}</div>
+          </ThemeProviderClient>
+        </AppRouterCacheProvider>
+
+        {/* </ClientProvider> */}
+        {/* <ToastProvider /> */}
       </body>
     </html>
   );
