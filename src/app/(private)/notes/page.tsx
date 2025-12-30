@@ -17,6 +17,7 @@ import AddIcon from "@mui/icons-material/Add";
 import { useRouter } from "next/navigation";
 import { useNotes } from "@/hooks/useNotes";
 import { NotePaper } from "@/myComponents/ui/NotePaper";
+import CustomSnackbar from "@/myComponents/ui/snackbar";
 
 type FormState = Omit<Note, "id">;
 
@@ -41,6 +42,9 @@ export default function NotesPage() {
 
   const [openDelete, setOpenDelete] = useState(false);
   const [deletingId, setDeletingId] = useState<number | null>(null);
+
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMsg, setSnackbarMsg] = useState("");
 
   const [form, setForm] = useState<FormState>({
     ...emptyForm,
@@ -81,9 +85,13 @@ export default function NotesPage() {
     try {
       if (mode === "create") {
         await createNote.mutateAsync(payload);
+      setSnackbarMsg(`${payload.content} was created successfully`);
+      setSnackbarOpen(true);
         
       } else if (editingId) {
         await updateNote.mutateAsync({ id: editingId, payload });
+         setSnackbarMsg(`${payload.content} was edited successfully`);
+      setSnackbarOpen(true);
       }
       setOpenForm(false);
     } finally {
@@ -105,6 +113,8 @@ export default function NotesPage() {
     if (!deletingId) return;
     closeDelete();
     await deleteNote.mutateAsync(deletingId);
+      setSnackbarMsg(`Note was deleted succesfully` );
+      setSnackbarOpen(true);
   }, [deletingId, deleteNote, closeDelete]);
 
   if (loading) return <Box sx={{ p: 3 }}><Typography>Loading…</Typography></Box>;
@@ -121,6 +131,9 @@ export default function NotesPage() {
 
   return (
     <Box sx={{ p: 3 }}>
+          <CustomSnackbar message={snackbarMsg} open={snackbarOpen}
+              autoHideDuration={4000}
+              onClose={() => setSnackbarOpen(false)}/>
       <Stack direction="row" justifyContent="space-between" alignItems="center" mb={2}>
         <Stack>
           <Typography variant="h5" fontWeight={800}>Your Notes</Typography>

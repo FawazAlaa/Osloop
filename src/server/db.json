@@ -7,15 +7,6 @@
       "password": "Fawaz1234",
       "tasks": [
         {
-          "id": 19,
-          "title": "bngcvgncvgn",
-          "description": "bvnvc bnv ",
-          "priority": "medium",
-          "status": "in-progress",
-          "createdAt": "2025-12-30T11:08:51.403Z",
-          "updatedAt": "2025-12-30T11:08:51.403Z"
-        },
-        {
           "id": 18,
           "title": "asdasd",
           "description": "asdasdasd",
@@ -65,9 +56,9 @@
           "title": "Low in progress task",
           "description": "yala wa7da in progress",
           "priority": "medium",
-          "status": "in-progress",
+          "status": "todo",
           "createdAt": "12/24/2025, 2:34:19 PM",
-          "updatedAt": "2025-12-30T11:08:40.710Z"
+          "updatedAt": "2025-12-30T13:04:18.889Z"
         },
         {
           "id": 1,
@@ -81,18 +72,6 @@
       ],
       "notes": [
         {
-          "id": 4,
-          "content": "mohakhbhmbmjbmjbnmnkmnm",
-          "createdAt": "2025-12-28T07:55:09.828Z",
-          "updatedAt": "2025-12-30T11:06:41.905Z"
-        },
-        {
-          "id": 3,
-          "content": "is this number 3 or will be note ya mosahel",
-          "createdAt": "2025-12-27T14:03:12.971Z",
-          "updatedAt": "2025-12-28T08:01:29.453Z"
-        },
-        {
           "id": 1,
           "content": "This is a sample note edited from single now in mutiple ",
           "createdAt": "2024-06-02T12:10:00Z",
@@ -100,18 +79,18 @@
         }
       ],
       "counters": {
-        "totalTasks": 8,
+        "totalTasks": 7,
         "tasksByStatus": {
-          "todo": 2,
-          "in-progress": 4,
+          "todo": 3,
+          "in-progress": 2,
           "done": 2
         },
-        "tasksByWeek": 4,
-        "notesCount": 3
+        "tasksByWeek": 3,
+        "notesCount": 1
       },
       "globalCounters": {
-        "taskId": 20,
-        "noteId": 5
+        "taskId": 21,
+        "noteId": 6
       }
     }
   ]

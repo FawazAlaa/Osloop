@@ -144,7 +144,7 @@ export default function TasksPage() {
     closeDelete();
     try {
       await deleteTask.mutateAsync(deletingId);
-        setSnackbarMsg(`Task was deleted succesfully` );
+      setSnackbarMsg(`Task was deleted succesfully` );
       setSnackbarOpen(true);
       
     } catch {

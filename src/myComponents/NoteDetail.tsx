@@ -21,6 +21,7 @@ import { useEditor, EditorContent } from "@tiptap/react"; //>>>> useEditor feha 
 // https://tiptap.dev/docs/editor/getting-started/install/nextjs
 //>>>>feha content, onUpdate
 import StarterKit from "@tiptap/starter-kit";
+import CustomSnackbar from "./ui/snackbar";
 
 function nowIso() {
   return new Date().toISOString();
@@ -28,7 +29,8 @@ function nowIso() {
 
 export default function NoteDetail({ id }: { id: number }) {
   const router = useRouter();
-
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMsg, setSnackbarMsg] = useState("");
   const { updateNote, deleteNote } = useNotes();
   const { data: note, isLoading, error } = useNote(id);
 
@@ -88,8 +90,12 @@ export default function NoteDetail({ id }: { id: number }) {
     try {
       await deleteNote.mutateAsync(id);
       closeDelete();
-      router.replace("/notes");
-      router.refresh();
+     setSnackbarMsg(`Note was deleted successfully bact to Notes`);
+      setSnackbarOpen(true);
+      closeDelete();
+           setTimeout(() => {
+      router.push("/notes");
+    }, 1200);    
     } catch (err) {
       console.error("Delete failed", err);
     }
@@ -103,13 +109,7 @@ export default function NoteDetail({ id }: { id: number }) {
     );
   }
 
-  if (error) {
-    return (
-      <Box sx={{ p: 3 }}>
-        <Typography color="error">Failed to load note.</Typography>
-      </Box>
-    );
-  }
+
 
   return (
     <Box
@@ -120,6 +120,9 @@ export default function NoteDetail({ id }: { id: number }) {
         placeItems: "center",
       }}
     >
+          <CustomSnackbar message={snackbarMsg} open={snackbarOpen}
+        autoHideDuration={4000}
+        onClose={() => setSnackbarOpen(false)}/>
       <Stack spacing={2} sx={{ width: "100%", maxWidth: 900 }}>
         <NotePaper
           note={note ?? null}

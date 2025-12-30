@@ -17,6 +17,8 @@ import {
 import { TaskPaper } from "./ui/paper";
 import { useTasks } from "@/hooks/useTasks";
 import { useTask } from "@/hooks/useTask";
+import { useRouter } from "next/navigation";
+import CustomSnackbar from "./ui/snackbar";
 
 type FormState = Omit<Task, "id">;
 const emptyForm: FormState = {
@@ -32,6 +34,7 @@ function nowIso() {
 }
 
 export default function TaskDetail({ id }: { id: number }) {
+  const router=useRouter()
   //queries takes hna
   const { loading, updateTask, deleteTask, error } = useTasks();
   const { data: task, isLoading } = useTask(id);
@@ -44,6 +47,9 @@ export default function TaskDetail({ id }: { id: number }) {
   });
   const [formError, setFormError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMsg, setSnackbarMsg] = useState("");
 
   function validateTaskPayload(payload: FormState): string | null {
     const result = taskSchema.safeParse(payload);
@@ -101,7 +107,12 @@ export default function TaskDetail({ id }: { id: number }) {
   const confirmDelete = useCallback(async () => {
     try {
       await deleteTask.mutateAsync(id);
+      setSnackbarMsg(`Task was deleted successfully bact to tasks`);
+      setSnackbarOpen(true);
       closeDelete();
+           setTimeout(() => {
+      router.push("/tasks");
+    }, 1200);    
     } catch (err) {
       console.error("Delete failed", err);
     }
@@ -117,6 +128,9 @@ export default function TaskDetail({ id }: { id: number }) {
         bgcolor: (t) => t.palette.grey[50],
       }}
     >
+          <CustomSnackbar message={snackbarMsg} open={snackbarOpen}
+        autoHideDuration={4000}
+        onClose={() => setSnackbarOpen(false)}/>
       <TaskPaper
         task={task ?? null}   //lazm aro7 ab3tha as task mn el usetask
         variant="detail"
