@@ -1,6 +1,6 @@
 import {createTheme , ThemeOptions} from '@mui/material/styles'
 import { colorMode } from '../types/colorMode';
-
+//https://dev.to/douglasporto/styling-your-site-with-nextjs-and-mui-creating-a-dynamic-theme-switcher-20c0
 export const getDesign= (mode: colorMode): ThemeOptions => ({
  palette: {
   mode,

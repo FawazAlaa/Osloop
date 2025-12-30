@@ -3,11 +3,11 @@ export type ClassDictionary = Record<string, any>;
 export type ClassArray = ClassValue[];
 
 
-export function clsx(...inputs: ClassValue[]): string {
+export function actionarray(...inputs: ClassValue[]): string {
   return inputs
 	.flat()
 	.filter((item) => typeof item === 'string' || typeof item === 'number')
 	.join(' ');
 }
 
-export default clsx;
+export default actionarray;

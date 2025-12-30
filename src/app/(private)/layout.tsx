@@ -1,9 +1,19 @@
-// You already have src/app/(private)/layout.tsx ✅
 
-// This layout should:
+import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 
-// Check if token exists
 
-// If not → redirect to /login
+export default async function PrivateLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("auth_token")?.value;
 
-// If yes → render the “AppShell” (AppBar/Drawer layout) around children
+  if (!token){
+  redirect("/login?reason=unauthorized"); //barag3 param lel login
+  } 
+
+  return <>{children}</>;
+}

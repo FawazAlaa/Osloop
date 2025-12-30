@@ -1,6 +1,8 @@
 "use client";
 
-import * as React from "react";
+import { useCallback, useEffect, useState } from "react";
+import type { Task } from "@/lib/interfaces/task";
+import { taskSchema } from "@/lib/services/taskSchema";
 import {
   Box,
   Button,
@@ -12,18 +14,11 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import type { Task } from "@/lib/interfaces/task";
-import { taskSchema } from "@/lib/services/taskSchema";
-import { useState, useEffect, useMemo, useCallback } from "react";
-
-import TasksTableView from "@/myComponents/TasksTableView";
-import TasksKanbanView from "@/myComponents/TasksKanbanView";
+import { TaskPaper } from "./ui/paper";
 import { useTasks } from "@/hooks/useTasks";
-import CustomSnackbar from "@/myComponents/ui/snackbar";
+import { useTask } from "@/hooks/useTask";
 
 type FormState = Omit<Task, "id">;
-
 const emptyForm: FormState = {
   title: "",
   description: "",
@@ -32,59 +27,36 @@ const emptyForm: FormState = {
   createdAt: "",
   updatedAt: "",
 };
-
 function nowIso() {
   return new Date().toISOString();
 }
 
-export default function TasksPage() {
-  const [view, setView] = useState<"table" | "kanban">("table");
-
-  // lel Create  w el edit w el delete
+export default function TaskDetail({ id }: { id: number }) {
+  //queries takes hna
+  const { loading, updateTask, deleteTask, error } = useTasks();
+  const { data: task, isLoading } = useTask(id);
+  /////////Form options/////
   const [openForm, setOpenForm] = useState(false);
-  const [mode, setMode] = useState<"create" | "edit">("create");
-  const [editingId, setEditingId] = useState<number | null>(null);
-  const [openDelete, setOpenDelete] = useState(false);
-  const [deletingId, setDeletingId] = useState<number | null>(null);
-  // lma agy a3mal form gdeda
   const [form, setForm] = useState<FormState>({
     ...emptyForm,
     createdAt: nowIso(),
     updatedAt: "",
   });
-
   const [formError, setFormError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
-  const { tasks, loading, error, createTask, updateTask, deleteTask } =
-    useTasks();
-   //7agat el sbnackbar
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMsg, setSnackbarMsg] = useState("");
-  //batcheck hna bel Zod validation
+
   function validateTaskPayload(payload: FormState): string | null {
     const result = taskSchema.safeParse(payload);
     if (result.success) return null;
     return result.error.issues[0]?.message ?? "Invalid task";
   }
-  //Dool bas mogard handling tools for close and open forms delete/Edit
-  //>>ya3ny helper Tools kolha useCallback For performance maximum effort <<<<
-  // //tegeb bas mish el logic
-  const onCreateClick = useCallback(() => {
-    setMode("create");
-    setEditingId(null);
-    setForm({
-      ...emptyForm,
-      createdAt: new Date().toLocaleString("en-GB"),
-      updatedAt: "",
-    });
-    setFormError(null);
-    setOpenForm(true);
-  }, []);
+  const closeForm = useCallback(() => {
+    if (!saving) setOpenForm(false);
+  }, [saving]);
   const now = (value: string | null | undefined) =>
     value ? new Date(value).toLocaleString() : "";
+  /////////////////////////////////////////////////////
   const onEdit = useCallback((t: Task) => {
-    setMode("edit");
-    setEditingId(t.id);
     setForm({
       title: t.title,
       description: t.description,
@@ -96,134 +68,67 @@ export default function TasksPage() {
     setFormError(null);
     setOpenForm(true);
   }, []);
-  const closeForm = useCallback(() => {
-    if (!saving) setOpenForm(false);
-  }, [saving]);
-
-  // Hna ba2a el logic kolo lel create/Edit/Delete
   const submitForm = useCallback(async () => {
     const payload: FormState = {
       ...form,
-      createdAt: form.createdAt || new Date().toLocaleString("en-GB"),
-      updatedAt: mode === "edit" ? new Date().toLocaleString("en-GB") : "", //LW edit yeb2a akeed update date
+      createdAt: form.createdAt, //|| new Date().toLocaleString('en-GB'),edit bas hna
+      updatedAt: new Date().toISOString(), //LW edit yeb2a akeed update date
     };
     const err = validateTaskPayload(payload);
     setFormError(err);
     if (err) return;
-
     setSaving(true);
+
     try {
-      if (mode === "create") {
-        await createTask.mutateAsync(payload);
-        setSnackbarMsg(`Task ${payload.title} created succesfully` );
-      setSnackbarOpen(true); //3kshan hna de async
-      } else {
-        if (mode === "edit" && editingId) {
-          await updateTask.mutateAsync({ id: editingId, payload });
-               setSnackbarMsg(`Task ${payload.title} was edied succesfully` );
-              setSnackbarOpen(true);
-        }
-      }
-      setOpenForm(false);
+      await updateTask.mutateAsync({ id, payload }); //3kshan hna de async
+    } catch (error) {
+      console.error("Failed to update task:", error);
     } finally {
+      setOpenForm(false);
       setSaving(false);
     }
-  }, [editingId, form, mode, createTask, updateTask]);
+  }, [id, form, updateTask]);
 
   // Hna ba2a el logic kolo lel Delete inside another form
-  const onDeleteRequest = useCallback((id: number) => {
-    setDeletingId(id);
-    setOpenDelete(true);
-  }, []);
+  //  //////////////Logic el delete
+  const [openDelete, setOpenDelete] = useState(false);
   const closeDelete = useCallback(() => {
     setOpenDelete(false);
-    setDeletingId(null);
+  }, []);
+  const onDeleteRequest = useCallback(() => {
+    setOpenDelete(true);
   }, []);
   const confirmDelete = useCallback(async () => {
-    if (!deletingId) return;
-    closeDelete();
     try {
-      await deleteTask.mutateAsync(deletingId);
-        setSnackbarMsg(`Task was deleted succesfully` );
-      setSnackbarOpen(true);
-      
-    } catch {
-      // setTasks(before); // rollback  bbadal mn hna momken a3mlo mn el useTask
+      await deleteTask.mutateAsync(id);
+      closeDelete();
+    } catch (err) {
+      console.error("Delete failed", err);
     }
-  }, [closeDelete, deletingId, deleteTask]);
-
-  // ---------------------------------------------------------------
+  }, [id, deleteTask, closeDelete]);
 
   return (
-    <Box sx={{ p: 3 }}>
-      <CustomSnackbar message={snackbarMsg} open={snackbarOpen}
-        autoHideDuration={4000}
-        onClose={() => setSnackbarOpen(false)}/>
-      <Box
-        sx={{
-          display: "grid",
-          gridTemplateColumns: "1fr auto 1fr",
-          alignItems: "center",
-          mb: 2,
+    <Box
+      sx={{
+        minHeight: "calc(100vh - 64px)",
+        p: { xs: 2, sm: 3 },
+        display: "grid",
+        placeItems: "center",
+        bgcolor: (t) => t.palette.grey[50],
+      }}
+    >
+      <TaskPaper
+        task={task ?? null}   //lazm aro7 ab3tha as task mn el usetask
+        variant="detail"
+        onEdit={onEdit}
+        onDelete={(taskId) => {
+          onDeleteRequest();
         }}
-      >
-        <Stack>
-          <Typography variant="h5" fontWeight={800}>
-            Your Todo List
-          </Typography>
-          <Typography variant="body2" sx={{ opacity: 0.7 }}>
-            Choose your preference: Table or Kanban
-          </Typography>
-        </Stack>
+      />
 
-
-        <Stack direction="row" spacing={1} justifySelf="center">
-          <Button
-            variant={view === "table" ? "contained" : "outlined"}
-            onClick={() => setView("table")}
-          >
-            Table
-          </Button>
-          <Button
-            variant={view === "kanban" ? "contained" : "outlined"}
-            onClick={() => setView("kanban")}
-          >
-            Kanban
-          </Button>
-        </Stack>
-
-        <Box sx={{ justifySelf: "end" }}>
-          <Button
-            variant="contained"
-            startIcon={<AddIcon />}
-            onClick={onCreateClick}
-          >
-            New
-          </Button>
-        </Box>
-      </Box>
-
-      {view === "table" ? (
-        <TasksTableView
-          tasks={tasks}
-          loading={loading}
-          onEdit={onEdit}
-          onDelete={onDeleteRequest}
-        />
-      ) : (
-        <TasksKanbanView
-          tasks={tasks}
-          loading={loading}
-          onEdit={onEdit}
-          onDelete={onDeleteRequest}
-        />
-      )}
-
-      {/* Create/Edit Dialog (shared for both views) */}
+      {/* Edit Dialog bas<<<<<<<<<<<<<<<<<<<<<*/}
       <Dialog open={openForm} onClose={closeForm} fullWidth maxWidth="sm">
-        <DialogTitle>
-          {mode === "create" ? "Create Task" : "Edit Task"}
-        </DialogTitle>
+        <DialogTitle>Edit Task</DialogTitle>
 
         <DialogContent dividers>
           <Stack spacing={2.5}>
@@ -310,6 +215,7 @@ export default function TasksPage() {
           <Button onClick={closeForm} disabled={saving}>
             Cancel
           </Button>
+          {/* hna el submit */}
           <Button variant="contained" onClick={submitForm} disabled={saving}>
             {saving ? "Saving..." : "Save"}
           </Button>
@@ -332,3 +238,4 @@ export default function TasksPage() {
     </Box>
   );
 }
+

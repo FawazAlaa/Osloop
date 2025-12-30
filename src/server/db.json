@@ -2,32 +2,117 @@
   "users": [
     {
       "id": 2,
+      "name": "Fawaz",
       "email": "fawazx9@hotmail.com",
       "password": "Fawaz1234",
       "tasks": [
         {
+          "id": 19,
+          "title": "bngcvgncvgn",
+          "description": "bvnvc bnv ",
+          "priority": "medium",
+          "status": "in-progress",
+          "createdAt": "2025-12-30T11:08:51.403Z",
+          "updatedAt": "2025-12-30T11:08:51.403Z"
+        },
+        {
+          "id": 18,
+          "title": "asdasd",
+          "description": "asdasdasd",
+          "priority": "medium",
+          "status": "todo",
+          "createdAt": "2025-12-29T14:03:40.489Z",
+          "updatedAt": "2025-12-29T14:03:40.489Z"
+        },
+        {
+          "id": 17,
+          "title": "read title in toaster",
+          "description": "ertdtgdfg",
+          "priority": "medium",
+          "status": "in-progress",
+          "createdAt": "2025-12-29T14:01:31.588Z",
+          "updatedAt": "2025-12-30T10:59:29.460Z"
+        },
+        {
+          "id": 16,
+          "title": "ssfg",
+          "description": "did we Do it tereeeeeeeeeeeeeeeeeeeeeeee",
+          "priority": "medium",
+          "status": "todo",
+          "createdAt": "12/29/2025, 10:41:31 AM",
+          "updatedAt": "2025-12-29T09:55:50.493Z"
+        },
+        {
+          "id": 15,
+          "title": "ugyfgjk",
+          "description": "check database",
+          "priority": "medium",
+          "status": "done",
+          "createdAt": "2025-12-25T13:46:32.169Z",
+          "updatedAt": "2025-12-30T10:59:33.280Z"
+        },
+        {
+          "id": 12,
+          "title": "high task",
+          "description": "just delete",
+          "priority": "high",
+          "status": "done",
+          "createdAt": "2025-12-25T12:00:03.790Z",
+          "updatedAt": "2025-12-30T10:59:35.131Z"
+        },
+        {
+          "id": 10,
+          "title": "Low in progress task",
+          "description": "yala wa7da in progress",
+          "priority": "medium",
+          "status": "in-progress",
+          "createdAt": "12/24/2025, 2:34:19 PM",
+          "updatedAt": "2025-12-30T11:08:40.710Z"
+        },
+        {
           "id": 1,
           "title": "Sample Task",
-          "description": "This is a sample task description.",
-          "priority": "low",
-          "status": "done",
-          "createdAt": "2024-06-01T10:00:00Z",
-          "updatedAt": "2024-06-02T12:00:00Z",
-          "notes": [
-            {
-              "id": 1,
-              "content": { "type": "doc", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "This is a sample note for the task." }] }] },
-              "createdAt": "2024-06-02T12:10:00Z",
-              "updatedAt": "2024-06-02T12:10:00Z"
-            }
-          ]
+          "description": "This is a sample task description was edited from task detail single page",
+          "priority": "medium",
+          "status": "in-progress",
+          "createdAt": "6/1/2024, 1:00:00 PM",
+          "updatedAt": "2025-12-28T21:40:18.261Z"
         }
-      ]
+      ],
+      "notes": [
+        {
+          "id": 4,
+          "content": "mohakhbhmbmjbmjbnmnkmnm",
+          "createdAt": "2025-12-28T07:55:09.828Z",
+          "updatedAt": "2025-12-30T11:06:41.905Z"
+        },
+        {
+          "id": 3,
+          "content": "is this number 3 or will be note ya mosahel",
+          "createdAt": "2025-12-27T14:03:12.971Z",
+          "updatedAt": "2025-12-28T08:01:29.453Z"
+        },
+        {
+          "id": 1,
+          "content": "This is a sample note edited from single now in mutiple ",
+          "createdAt": "2024-06-02T12:10:00Z",
+          "updatedAt": "2025-12-27T14:01:14.208Z"
+        }
+      ],
+      "counters": {
+        "totalTasks": 8,
+        "tasksByStatus": {
+          "todo": 2,
+          "in-progress": 4,
+          "done": 2
+        },
+        "tasksByWeek": 4,
+        "notesCount": 3
+      },
+      "globalCounters": {
+        "taskId": 20,
+        "noteId": 5
+      }
     }
-  ],
-  "counters": {
-    "userId": 2,
-    "taskId": 2,
-    "noteId": 2
-  }
+  ]
 }
