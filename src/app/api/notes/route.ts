@@ -1,6 +1,6 @@
-// >>>>>>>>>>>>>>>>>>>>>>>>>✅ GET / POST /api/notes<<<<<<<<<<<<<<<<<<<<<<<<<<
+// >>>>>>>>>>>>>>>>>>>>>>>>> GET / POST /api/notes<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-import { NextResponse } from "next/server";
+import { NextResponse,NextRequest } from "next/server";
 import { readDB, writeDB, nowISO, findUser, recomputeCounters } from "@/server/db";
 import { getUserIdFromRequest } from "@/server/auth";
 
@@ -15,7 +15,7 @@ export async function GET() {
   return NextResponse.json(user.notes);
 }
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   const userId = await getUserIdFromRequest();
   if (!userId) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
 

@@ -1,10 +1,10 @@
-// >>>>>>>>>>>>>>>>>>>✅ PUT / DELETE /api/notes/[id]<<<<<<<<<<<<<<<<<<<<<<<
+// >>>>>>>>>>>>>>>>>>> PUT / DELETE /api/notes/[id]<<<<<<<<<<<<<<<<<<<<<<<
 
-import { NextResponse } from "next/server";
+import { NextResponse,NextRequest } from "next/server";
 import { readDB, writeDB, nowISO, findUser, recomputeCounters } from "@/server/db";
 import { getUserIdFromRequest } from "@/server/auth";
-
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
+type Context = { params: Promise<{ id: string }> }; //3slahn vercel maiz3lsh
+export async function PUT(req: NextRequest, { params }: Context) {
   const userId = await getUserIdFromRequest();
   if (!userId) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     
@@ -26,7 +26,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
   return NextResponse.json(user.notes[idx]);
 }
 
-export async function DELETE(req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, { params }: Context) {
   const userId =await getUserIdFromRequest();
   if (!userId) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   const { id } = await params; 

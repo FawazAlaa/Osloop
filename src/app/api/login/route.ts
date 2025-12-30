@@ -1,7 +1,7 @@
-import { NextResponse } from "next/server";
+import { NextResponse,NextRequest } from "next/server";
 import { readDB } from "@/server/db";
  //https://nextjs.org/docs/app/api-reference/functions/cookies
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   const { email, password } = await req.json();
   const db = await readDB();
 

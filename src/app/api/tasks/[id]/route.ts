@@ -1,8 +1,9 @@
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> GET / PUT / DELETE /api/tasks/:id<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-import { NextResponse } from "next/server";
+import { NextResponse,NextRequest } from "next/server";
 import { readDB, writeDB, nowISO, findUser, recomputeCounters } from "@/server/db";
 import { getUserIdFromRequest } from "@/server/auth";
 
+type Context = { params: Promise<{ id: string }> }; //3slahn vercel maiz3lsh
 export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const userId =await getUserIdFromRequest();
   if (!userId) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
@@ -25,7 +26,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
   return NextResponse.json(task);
 }
 
-export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
+export async function PUT(req: NextRequest, { params }: Context) {
   const userId =await getUserIdFromRequest();  
   if (!userId) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
 
@@ -51,7 +52,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
   return NextResponse.json(user.tasks[idx]);
 }
 
-export async function DELETE(req: Request, { params }: { params:  Promise<{ id: string }> }) {
+export async function DELETE(req: NextRequest, { params }: Context) {
   const userId =await getUserIdFromRequest();
   if (!userId) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
 

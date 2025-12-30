@@ -1,8 +1,10 @@
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>> GET/POST  el call mn /api/tasks<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-import { NextResponse } from "next/server";
+import { NextResponse,NextRequest } from "next/server";
 import { readDB, writeDB, nowISO, findUser, recomputeCounters } from "@/server/db";
 import { getUserIdFromRequest } from "@/server/auth";
+
+type Context = { params: Promise<{ id: string }> }; //3slahn vercel maiz3lsh
 // El awl bas 3lshan negeeb el data 
 export async function GET() {
   const userId = await getUserIdFromRequest();
@@ -15,7 +17,7 @@ export async function GET() {
   return NextResponse.json(user.tasks);
 }
 // w hna 3lshan add data mn el req body frontend 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   const userId =await getUserIdFromRequest();
   if (!userId) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
 
